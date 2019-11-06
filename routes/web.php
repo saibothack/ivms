@@ -20,7 +20,6 @@ Auth::routes();
 Route::get('/', 'DasboardController@index')->name('home');
 
 Route::resource('users', 'UserController');
-
 Route::resource('roles', 'RoleController');
-
 Route::resource('permissions', 'PermissionController');
+Route::resource('lines', 'LineController');

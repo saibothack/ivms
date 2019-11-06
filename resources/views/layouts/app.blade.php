@@ -48,7 +48,7 @@
                                 <a class="nav-link" href="{{ route('permissions.index') }}">Permisos</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="{{ route('login') }}">Lineas</a>
+                                <a class="nav-link" href="{{ route('lines.index') }}">Lineas</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link" href="{{ route('users.index') }}">Usuarios</a>

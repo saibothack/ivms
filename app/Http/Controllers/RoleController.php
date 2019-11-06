@@ -116,7 +116,6 @@ class RoleController extends Controller {
      */
     public function update(Request $request, $id) {
 
-        $user = Auth::User();
         $role = Role::where('status', '=', 1)->findOrFail($id);//Get role with the given id
         //Validate name and permission fields
         
@@ -125,9 +124,10 @@ class RoleController extends Controller {
             'permissions' =>'required',
         ]);
 
-        $user = Auth::User();
+        
         $input = $request->except(['permissions']);
         $permissions = $request['permissions'];
+        $user = Auth::User();
         $input["user_modified"] = $user->id;
         $role->fill($input)->save();
 
@@ -157,6 +157,8 @@ class RoleController extends Controller {
     public function destroy($id)
     {
         $role = Role::where('status', '=', 1)->findOrFail($id);
+        $user = Auth::User();
+        $roleUpdate["user_modified"] = $user->id;
         $roleUpdate["status"] = 0;
         
         $role->fill($roleUpdate)->save();

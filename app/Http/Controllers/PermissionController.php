@@ -50,10 +50,13 @@ class PermissionController extends Controller {
         $this->validate($request, [
             'name'=>'required|max:40',
         ]);
+        
+        $user = Auth::User();
 
         $name = $request['name'];
         $permission = new Permission();
         $permission->name = $name;
+        $permission->user_create = $user->id;
 
         $roles = $request['roles'];
 
@@ -70,7 +73,7 @@ class PermissionController extends Controller {
 
         return redirect()->route('permissions.index')
             ->with('flash_message',
-             'Permission'. $permission->name.' added!');
+             'Permiso '. $permission->name.' agregado!');
 
     }
 
@@ -108,12 +111,15 @@ class PermissionController extends Controller {
         $this->validate($request, [
             'name'=>'required|max:40',
         ]);
+        
+        $user = Auth::User();
         $input = $request->all();
+        $input["user_modified"] = $user->id;
         $permission->fill($input)->save();
 
         return redirect()->route('permissions.index')
             ->with('flash_message',
-             'Permission'. $permission->name.' updated!');
+             'Permiso '. $permission->name.' modificado!');
 
     }
 
@@ -126,14 +132,18 @@ class PermissionController extends Controller {
     public function destroy($id) {
         $permission = Permission::findOrFail($id);
 
-    //Make it impossible to delete this specific permission    
-    if ($permission->name == "Administer roles & permissions") {
+        //Make it impossible to delete this specific permission    
+        if ($permission->name == "Administer roles & permissions") {
             return redirect()->route('permissions.index')
             ->with('flash_message',
-             'Cannot delete this Permission!');
+             'No tiene permiso para eliminar el permiso!');
         }
+        
+        $user = Auth::User();
+        $permissionUpdate["user_modified"] = $user->id;
+        $permissionUpdate["status"] = 0;
 
-        $permission->delete();
+        $permission->fill($permissionUpdate)->save();
 
         return redirect()->route('permissions.index')
             ->with('flash_message',
